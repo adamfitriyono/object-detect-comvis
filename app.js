@@ -153,6 +153,18 @@ function rerenderDetectionResults() {
   });
 }
 
+// Fungsi untuk update step indicator
+function updateStepIndicator(activeStep) {
+  const stepItems = document.querySelectorAll('.step-item');
+  stepItems.forEach((item, index) => {
+    if (index + 1 <= activeStep) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+}
+
 // Fungsi untuk display hasil deteksi
 function displayDetectionResults(originalCanvas, detections) {
   console.log('Displaying results:', detections);
@@ -172,6 +184,9 @@ function displayDetectionResults(originalCanvas, detections) {
   if (resultSection) {
     resultSection.style.display = 'block';
   }
+
+  // Update step indicator to step 3
+  updateStepIndicator(3);
 
   // Get result canvas
   const resultCanvas = document.getElementById('resultCanvas');
@@ -283,6 +298,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const cameraSection = document.getElementById('camera-section');
       if (cameraSection) {
         cameraSection.style.display = 'block';
+        // Update step indicator to step 2
+        updateStepIndicator(2);
         // Scroll to camera section
         cameraSection.scrollIntoView({ behavior: 'smooth' });
       }

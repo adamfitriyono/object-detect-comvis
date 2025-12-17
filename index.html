@@ -20,130 +20,207 @@
   <body class="d-flex flex-column min-vh-100">
     <!-- Header Banner -->
     <header class="header-banner">
-      <div class="container text-center py-5">
-        <div class="header-icon mb-3">
+      <!-- Animated Background Elements -->
+      <div class="header-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+      </div>
+
+      <div class="container text-center py-5 position-relative">
+        <div class="header-icon mb-4">
           <i class="bi bi-cone-striped"></i>
         </div>
         <h1 class="header-title mb-3">Deteksi Jalan Berlubang</h1>
-        <span class="header-badge"> <i class="bi bi-cpu me-1"></i>YOLOv8-Powered Detection </span>
+        <!-- <p class="header-subtitle mb-4">Sistem Deteksi Otomatis dengan Teknologi AI untuk Identifikasi Kerusakan Jalan</p> -->
+        <span class="header-badge">
+          <i class="bi bi-cpu me-2"></i>
+          <span>YOLOv8-Powered Detection</span>
+        </span>
       </div>
     </header>
 
     <!-- Main Container -->
     <div class="container my-4 flex-grow-1">
+      <!-- Step Indicator -->
+      <div class="step-indicator mb-4">
+        <div class="step-item active">
+          <div class="step-number">1</div>
+          <div class="step-label">Lokasi</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-label">Kamera</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-label">Hasil</div>
+        </div>
+      </div>
+
       <!-- SECTION 1: FORM LOKASI -->
-      <section id="location-section" class="mb-4">
-        <div class="card shadow-sm border-0">
-          <div class="card-header bg-primary text-white">
+      <section id="location-section" class="mb-4 section-enhanced">
+        <div class="card-modern card-location">
+          <div class="card-header-modern card-header-location">
             <h2 class="card-title h5 mb-0"><i class="bi bi-geo-alt-fill me-2"></i>Informasi Lokasi</h2>
           </div>
           <div class="card-body">
-            <div class="mb-3">
-              <label for="addressInput" class="form-label fw-semibold">Cari Alamat</label>
-              <input type="text" class="form-control form-control-lg" id="addressInput" placeholder="Ketik alamat (contoh: Jl. Sudirman, Jakarta)" autocomplete="off" />
+            <div class="mb-4">
+              <label for="addressInput" class="form-label fw-semibold mb-2"> <i class="bi bi-search me-2 text-primary"></i>Cari Alamat </label>
+              <div class="input-group-modern">
+                <span class="input-icon"><i class="bi bi-geo-alt"></i></span>
+                <input type="text" class="form-control form-control-lg input-enhanced" id="addressInput" placeholder="Ketik alamat (contoh: Jalan Imam Bonjol)" autocomplete="off" />
+              </div>
               <div id="addressSuggestions" class="suggestions"></div>
             </div>
 
-            <div class="row g-3 mb-3">
+            <div class="row g-3 mb-4">
               <div class="col-md-8">
-                <label for="manualAddress" class="form-label fw-semibold">Atau Input Manual</label>
-                <input type="text" class="form-control" id="manualAddress" placeholder="Masukkan alamat lengkap" />
+                <label for="manualAddress" class="form-label fw-semibold mb-2"> <i class="bi bi-pencil-square me-2 text-primary"></i>Atau Input Manual </label>
+                <div class="input-group-modern">
+                  <span class="input-icon"><i class="bi bi-pencil"></i></span>
+                  <input type="text" class="form-control input-enhanced" id="manualAddress" placeholder="Masukkan alamat lengkap" />
+                </div>
               </div>
               <div class="col-md-4 d-flex align-items-end">
-                <button id="getCurrentLocationBtn" class="btn btn-outline-primary w-100"><i class="bi bi-geo-alt-fill me-2"></i>Ambil Lokasi Saat Ini</button>
+                <button id="getCurrentLocationBtn" class="btn btn-gradient-primary w-100"><i class="bi bi-crosshair me-2"></i>Ambil Lokasi Saat Ini</button>
               </div>
             </div>
 
             <!-- Detail Alamat -->
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <label for="street" class="form-label fw-semibold">Jalan</label>
-                <input type="text" class="form-control" id="street" readonly />
-              </div>
-              <div class="col-md-6">
-                <label for="village" class="form-label fw-semibold">Desa/Kelurahan</label>
-                <input type="text" class="form-control" id="village" readonly />
-              </div>
-              <div class="col-md-6">
-                <label for="district" class="form-label fw-semibold">Kecamatan</label>
-                <input type="text" class="form-control" id="district" readonly />
-              </div>
-              <div class="col-md-6">
-                <label for="city" class="form-label fw-semibold">Kota/Kabupaten</label>
-                <input type="text" class="form-control" id="city" readonly />
+            <div class="info-section mb-4">
+              <h6 class="section-subtitle mb-3"><i class="bi bi-info-circle me-2 text-primary"></i>Detail Alamat</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="street" class="form-label fw-semibold small">Jalan</label>
+                  <div class="input-group-modern">
+                    <span class="input-icon"><i class="bi bi-signpost"></i></span>
+                    <input type="text" class="form-control input-enhanced" id="street" readonly />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="village" class="form-label fw-semibold small">Desa/Kelurahan</label>
+                  <div class="input-group-modern">
+                    <span class="input-icon"><i class="bi bi-house-door"></i></span>
+                    <input type="text" class="form-control input-enhanced" id="village" readonly />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="district" class="form-label fw-semibold small">Kecamatan</label>
+                  <div class="input-group-modern">
+                    <span class="input-icon"><i class="bi bi-building"></i></span>
+                    <input type="text" class="form-control input-enhanced" id="district" readonly />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="city" class="form-label fw-semibold small">Kota/Kabupaten</label>
+                  <div class="input-group-modern">
+                    <span class="input-icon"><i class="bi bi-geo"></i></span>
+                    <input type="text" class="form-control input-enhanced" id="city" readonly />
+                  </div>
+                </div>
               </div>
             </div>
 
             <!-- Koordinat -->
-            <div class="row g-3 mb-3">
-              <div class="col-md-6">
-                <label for="latitude" class="form-label fw-semibold">Latitude</label>
-                <input type="text" class="form-control" id="latitude" readonly />
-              </div>
-              <div class="col-md-6">
-                <label for="longitude" class="form-label fw-semibold">Longitude</label>
-                <input type="text" class="form-control" id="longitude" readonly />
+            <div class="info-section mb-4">
+              <h6 class="section-subtitle mb-3"><i class="bi bi-geo-alt me-2 text-primary"></i>Koordinat</h6>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="latitude" class="form-label fw-semibold small">Latitude</label>
+                  <div class="input-group-modern">
+                    <span class="input-icon"><i class="bi bi-arrow-up"></i></span>
+                    <input type="text" class="form-control input-enhanced" id="latitude" readonly />
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label for="longitude" class="form-label fw-semibold small">Longitude</label>
+                  <div class="input-group-modern">
+                    <span class="input-icon"><i class="bi bi-arrow-right"></i></span>
+                    <input type="text" class="form-control input-enhanced" id="longitude" readonly />
+                  </div>
+                </div>
               </div>
             </div>
 
             <!-- Map Preview -->
-            <div id="map" class="map-container rounded overflow-hidden border"></div>
+            <div class="map-wrapper">
+              <div id="map" class="map-container-enhanced"></div>
+              <div class="map-overlay-badge"><i class="bi bi-map me-1"></i>Peta Lokasi</div>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- SECTION 2: KAMERA & DETEKSI -->
-      <section id="camera-section" class="mb-4">
-        <div class="card shadow-sm border-0">
-          <div class="card-header bg-success text-white">
+      <section id="camera-section" class="mb-4 section-enhanced">
+        <div class="card-modern card-camera">
+          <div class="card-header-modern card-header-camera">
             <h2 class="card-title h5 mb-0"><i class="bi bi-camera-fill me-2"></i>Kamera Real-Time</h2>
           </div>
           <div class="card-body">
-            <div class="d-flex flex-wrap gap-2 mb-3">
-              <button id="startCameraBtn" class="btn btn-primary"><i class="bi bi-camera-video-fill me-2"></i>Mulai Kamera</button>
-              <button id="stopCameraBtn" class="btn btn-secondary" disabled><i class="bi bi-stop-circle-fill me-2"></i>Hentikan Kamera</button>
-              <button id="captureBtn" class="btn btn-success" disabled><i class="bi bi-camera2 me-2"></i>Deteksi Sekarang</button>
+            <div class="button-group-modern mb-4">
+              <button id="startCameraBtn" class="btn btn-gradient-primary btn-action"><i class="bi bi-camera-video-fill me-2"></i>Mulai Kamera</button>
+              <button id="stopCameraBtn" class="btn btn-gradient-secondary btn-action" disabled><i class="bi bi-stop-circle-fill me-2"></i>Hentikan Kamera</button>
+              <button id="captureBtn" class="btn btn-gradient-success btn-action" disabled><i class="bi bi-camera2 me-2"></i>Deteksi Sekarang</button>
             </div>
 
             <!-- Video Feed -->
-            <div class="video-container rounded overflow-hidden border bg-dark mb-3">
-              <video id="videoElement" autoplay playsinline class="w-100"></video>
-              <canvas id="videoCanvas" style="display: none"></canvas>
+            <div class="video-wrapper">
+              <div class="video-container-enhanced">
+                <video id="videoElement" autoplay playsinline class="w-100"></video>
+                <canvas id="videoCanvas" style="display: none"></canvas>
+                <div class="video-status-overlay" id="videoStatusOverlay" style="display: none">
+                  <div class="status-badge status-active"><i class="bi bi-record-circle-fill me-2"></i>Kamera Aktif</div>
+                </div>
+                <div class="video-placeholder" id="videoPlaceholder">
+                  <i class="bi bi-camera-video-off fs-1 text-muted mb-3"></i>
+                  <p class="text-muted mb-0">Klik "Mulai Kamera" untuk mengaktifkan</p>
+                </div>
+              </div>
             </div>
 
             <!-- Loading Indicator -->
-            <div id="loadingIndicator" class="text-center py-4" style="display: none">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+            <div id="loadingIndicator" class="loading-indicator-modern" style="display: none">
+              <div class="loading-content">
+                <div class="spinner-modern">
+                  <div class="spinner-ring"></div>
+                  <div class="spinner-ring"></div>
+                  <div class="spinner-ring"></div>
+                </div>
+                <p class="loading-text mt-3">Memproses deteksi...</p>
               </div>
-              <p class="mt-3 text-muted">Memproses deteksi...</p>
             </div>
           </div>
         </div>
       </section>
 
       <!-- SECTION 3: HASIL DETEKSI -->
-      <section id="result-section" class="result-section mb-4" style="display: none">
-        <div class="card shadow-sm border-0">
-          <div class="card-header bg-info text-white">
+      <section id="result-section" class="result-section mb-4 section-enhanced" style="display: none">
+        <div class="card-modern card-result">
+          <div class="card-header-modern card-header-result">
             <h2 class="card-title h5 mb-0"><i class="bi bi-check-circle-fill me-2"></i>Hasil Deteksi</h2>
           </div>
           <div class="card-body">
-            <div class="text-center mb-4">
-              <canvas id="resultCanvas" class="img-fluid rounded shadow"></canvas>
+            <div class="result-image-wrapper mb-4">
+              <canvas id="resultCanvas" class="result-canvas-enhanced"></canvas>
             </div>
 
             <!-- Kategori Kerusakan -->
             <div class="row mb-4">
               <div class="col-12">
-                <div class="card border-0 shadow-sm" id="categoryCard">
-                  <div class="card-body text-center py-4">
+                <div class="card-category-modern" id="categoryCard">
+                  <div class="card-body text-center py-5">
                     <div class="category-icon mb-3" id="categoryIcon">
                       <i class="bi bi-check-circle-fill fs-1"></i>
                     </div>
-                    <h4 class="mb-2" id="categoryTitle">Jalan Bagus</h4>
-                    <p class="text-muted mb-3" id="categoryDescription">Tidak ada kerusakan terdeteksi</p>
-                    <span class="badge fs-6 px-4 py-2" id="categoryBadge">Jalan Bagus</span>
+                    <h3 class="mb-2 fw-bold" id="categoryTitle">Jalan Bagus</h3>
+                    <p class="text-muted mb-4" id="categoryDescription">Tidak ada kerusakan terdeteksi</p>
+                    <span class="badge-modern fs-6 px-4 py-2" id="categoryBadge">Jalan Bagus</span>
                   </div>
                 </div>
               </div>
@@ -151,43 +228,53 @@
 
             <div class="row g-3 mb-4">
               <div class="col-md-6">
-                <div class="card bg-light h-100">
+                <div class="info-card-modern h-100">
                   <div class="card-body">
-                    <h5 class="card-title text-primary"><i class="bi bi-graph-up me-2"></i>Informasi Deteksi</h5>
-                    <hr />
-                    <p class="card-text mb-2">
-                      <strong>Jumlah Lubang Terdeteksi:</strong>
-                      <span class="badge bg-primary ms-2 fs-6" id="potholeCount">0</span>
-                    </p>
-                    <p class="card-text mb-0">
-                      <strong>Waktu Deteksi:</strong>
-                      <br /><small class="text-muted" id="detectionTime">-</small>
-                    </p>
+                    <div class="info-card-header mb-3">
+                      <i class="bi bi-graph-up-arrow info-icon"></i>
+                      <h5 class="card-title mb-0">Informasi Deteksi</h5>
+                    </div>
+                    <div class="info-item">
+                      <span class="info-label">Jumlah Lubang Terdeteksi:</span>
+                      <span class="badge-modern badge-primary ms-2" id="potholeCount">0</span>
+                    </div>
+                    <div class="info-item mt-3">
+                      <span class="info-label">Waktu Deteksi:</span>
+                      <div class="info-value mt-1">
+                        <small class="text-muted" id="detectionTime">-</small>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="col-md-6">
-                <div class="card bg-light h-100">
+                <div class="info-card-modern h-100">
                   <div class="card-body">
-                    <h5 class="card-title text-primary"><i class="bi bi-geo-alt-fill me-2"></i>Lokasi</h5>
-                    <hr />
-                    <p class="card-text mb-2">
-                      <strong>Alamat:</strong>
-                      <br /><small class="text-muted" id="resultAddress">-</small>
-                    </p>
-                    <p class="card-text mb-0">
-                      <strong>Koordinat:</strong>
-                      <br /><small class="text-muted" id="resultCoordinates">-</small>
-                    </p>
+                    <div class="info-card-header mb-3">
+                      <i class="bi bi-geo-alt-fill info-icon"></i>
+                      <h5 class="card-title mb-0">Lokasi</h5>
+                    </div>
+                    <div class="info-item">
+                      <span class="info-label">Alamat:</span>
+                      <div class="info-value mt-1">
+                        <small class="text-muted" id="resultAddress">-</small>
+                      </div>
+                    </div>
+                    <div class="info-item mt-3">
+                      <span class="info-label">Koordinat:</span>
+                      <div class="info-value mt-1">
+                        <small class="text-muted" id="resultCoordinates">-</small>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="d-flex flex-wrap gap-2">
-              <button id="toggleHeatmapBtn" class="btn btn-secondary"><i class="bi bi-eye me-2"></i>Tampilkan Heatmap</button>
-              <button id="detectAgainBtn" class="btn btn-primary"><i class="bi bi-arrow-clockwise me-2"></i>Deteksi Lagi</button>
+            <div class="button-group-modern">
+              <button id="toggleHeatmapBtn" class="btn btn-gradient-secondary btn-action"><i class="bi bi-eye me-2"></i>Tampilkan Heatmap</button>
+              <button id="detectAgainBtn" class="btn btn-gradient-primary btn-action"><i class="bi bi-arrow-clockwise me-2"></i>Deteksi Lagi</button>
             </div>
           </div>
         </div>
@@ -210,9 +297,9 @@
             <h5 class="footer-heading mb-3">Fitur Utama:</h5>
             <ul class="footer-list">
               <li>Deteksi Real-Time</li>
-              <li>Heatmap Visualization</li>
               <li>Location Tracking</li>
-              <li>Akurasi Tinggi</li>
+              <li>Bounding Box Visualization</li>
+              <li>Heatmap Visualization</li>
             </ul>
           </div>
 

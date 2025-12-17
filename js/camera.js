@@ -49,6 +49,9 @@ async function startCamera() {
         showLoading(false);
         showAlert('Kamera berhasil diaktifkan!', 'success');
         
+        // Update video UI
+        updateVideoUI(true);
+        
         // Update button states
         updateCameraButtons(true);
         
@@ -91,6 +94,9 @@ function stopCamera() {
     
     isCameraActive = false;
     
+    // Update video UI
+    updateVideoUI(false);
+    
     // Update button states
     updateCameraButtons(false);
     
@@ -132,6 +138,20 @@ function updateCameraButtons(cameraActive) {
         startBtn.disabled = false;
         stopBtn.disabled = true;
         captureBtn.disabled = true;
+    }
+}
+
+// Fungsi untuk update video UI (placeholder dan status overlay)
+function updateVideoUI(cameraActive) {
+    const videoPlaceholder = document.getElementById('videoPlaceholder');
+    const videoStatusOverlay = document.getElementById('videoStatusOverlay');
+    
+    if (cameraActive) {
+        if (videoPlaceholder) videoPlaceholder.style.display = 'none';
+        if (videoStatusOverlay) videoStatusOverlay.style.display = 'block';
+    } else {
+        if (videoPlaceholder) videoPlaceholder.style.display = 'block';
+        if (videoStatusOverlay) videoStatusOverlay.style.display = 'none';
     }
 }
 
