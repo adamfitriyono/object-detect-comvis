@@ -224,7 +224,7 @@ body {
 /* Enhanced Title Typography */
 .header-title {
     font-size: 3.5rem;
-    font-weight: 800;
+    font-weight: 700;
     color: white;
     text-shadow: 
         0 2px 4px rgba(0, 0, 0, 0.3),
@@ -710,64 +710,6 @@ html {
     }
 }
 
-/* Category Card Styling */
-#categoryCard {
-    transition: all 0.3s ease;
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.category-icon {
-    transition: transform 0.3s ease;
-}
-
-.category-icon:hover {
-    transform: scale(1.1);
-}
-
-#categoryBadge {
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#categoryCard.border-success {
-    background: linear-gradient(to bottom, rgba(25, 135, 84, 0.05) 0%, rgba(25, 135, 84, 0.02) 100%);
-}
-
-#categoryCard.border-warning {
-    background: linear-gradient(to bottom, rgba(255, 193, 7, 0.05) 0%, rgba(255, 193, 7, 0.02) 100%);
-}
-
-#categoryCard.border-danger {
-    background: linear-gradient(to bottom, rgba(220, 53, 69, 0.05) 0%, rgba(220, 53, 69, 0.02) 100%);
-}
-
-/* Responsive Category Card */
-@media (max-width: 768px) {
-    .category-icon i {
-        font-size: 2.5rem !important;
-    }
-    
-    #categoryTitle {
-        font-size: 1.5rem;
-    }
-    
-    #categoryBadge {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem !important;
-    }
-}
 
 /* ============================================
    ENHANCED UI STYLES - MAIN FUNCTIONAL AREAS
@@ -1337,37 +1279,6 @@ html {
     }
 }
 
-/* Enhanced Category Card */
-.card-category-modern {
-    border: none;
-    border-radius: var(--border-radius);
-    box-shadow: var(--card-shadow);
-    overflow: hidden;
-    transition: var(--transition);
-    position: relative;
-    background: white;
-    margin-bottom: 2rem;
-}
-
-.card-category-modern .card-body {
-    padding: 2.5rem 2rem;
-}
-
-.card-category-modern::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: var(--primary-gradient);
-    transition: var(--transition);
-}
-
-.card-category-modern:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--card-shadow-hover);
-}
 
 .badge-modern {
     padding: 0.6rem 1.5rem;
@@ -1544,7 +1455,4 @@ html {
         padding: 1rem;
     }
     
-    .card-category-modern .card-body {
-        padding: 1.5rem 1.25rem;
-    }
 }

@@ -9,43 +9,6 @@ let showHeatmap = false; // Toggle untuk heatmap visualization
 let lastDetectionCanvas = null; // Simpan canvas original untuk re-render
 let lastDetections = null; // Simpan detections untuk re-render
 
-// Fungsi untuk mengkategorikan kerusakan jalan berdasarkan jumlah deteksi
-function categorizeRoadDamage(count) {
-  if (count === 0) {
-    return {
-      category: 'Jalan Bagus',
-      severity: 'good',
-      color: 'success',
-      icon: 'bi-check-circle-fill',
-      description: 'Tidak ada kerusakan terdeteksi',
-    };
-  } else if (count >= 1 && count <= 3) {
-    return {
-      category: 'Rusak Ringan',
-      severity: 'light',
-      color: 'warning',
-      icon: 'bi-exclamation-triangle-fill',
-      description: 'Kerusakan ringan, perlu perhatian',
-    };
-  } else if (count >= 4 && count <= 7) {
-    return {
-      category: 'Rusak Sedang',
-      severity: 'moderate',
-      color: 'warning',
-      icon: 'bi-exclamation-triangle-fill',
-      description: 'Kerusakan sedang, perlu perbaikan',
-    };
-  } else {
-    return {
-      category: 'Rusak Berat',
-      severity: 'severe',
-      color: 'danger',
-      icon: 'bi-x-circle-fill',
-      description: 'Kerusakan berat, perlu perbaikan segera',
-    };
-  }
-}
-
 // Fungsi utama yang dijalankan saat halaman selesai load
 document.addEventListener('DOMContentLoaded', async function () {
   console.log('Application started');
@@ -216,43 +179,6 @@ function displayDetectionResults(originalCanvas, detections) {
   // Update info
   document.getElementById('potholeCount').textContent = detections.length;
   document.getElementById('detectionTime').textContent = formatDateTime(new Date());
-
-  // Kategorisasi kerusakan jalan
-  const damageCategory = categorizeRoadDamage(detections.length);
-
-  // Update kategori UI
-  const categoryIcon = document.getElementById('categoryIcon');
-  const categoryTitle = document.getElementById('categoryTitle');
-  const categoryDescription = document.getElementById('categoryDescription');
-  const categoryBadge = document.getElementById('categoryBadge');
-  const categoryCard = document.getElementById('categoryCard');
-
-  if (categoryIcon && categoryTitle && categoryDescription && categoryBadge && categoryCard) {
-    // Update icon
-    categoryIcon.innerHTML = `<i class="bi ${damageCategory.icon} fs-1 text-${damageCategory.color}"></i>`;
-
-    // Update title
-    categoryTitle.textContent = damageCategory.category;
-    categoryTitle.className = `mb-2 text-${damageCategory.color}`;
-
-    // Update description
-    categoryDescription.textContent = damageCategory.description;
-
-    // Update badge
-    categoryBadge.textContent = damageCategory.category;
-    categoryBadge.className = `badge bg-${damageCategory.color} fs-6 px-4 py-2`;
-
-    // Update card border color (optional, untuk visual yang lebih menarik)
-    // Remove existing border classes
-    categoryCard.classList.remove('border-success', 'border-warning', 'border-danger');
-    // Add new border class
-    const borderColors = {
-      success: '#198754',
-      warning: '#ffc107',
-      danger: '#dc3545',
-    };
-    categoryCard.style.borderTop = `4px solid ${borderColors[damageCategory.color] || '#198754'}`;
-  }
 
   // Get location data
   const locationData = getCurrentLocationData();
