@@ -292,17 +292,32 @@
 
       <!-- Modal untuk Zoom Cropped Image -->
       <div class="modal fade" id="cropZoomModal" tabindex="-1" aria-labelledby="cropZoomModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="cropZoomModalLabel"><i class="bi bi-zoom-in me-2"></i>Detail Deteksi</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center">
-              <img id="cropZoomImage" src="" alt="Cropped Detection" class="img-fluid rounded" />
-              <div class="crop-zoom-info mt-3">
-                <span class="badge bg-primary" id="cropZoomConfidence">-</span>
+            <div class="modal-body">
+              <div class="row g-4">
+                <div class="col-md-5 text-center">
+                  <img id="cropZoomImage" src="" alt="Cropped Detection" class="img-fluid rounded crop-zoom-img" />
+                  <div class="crop-zoom-info mt-3">
+                    <span class="badge bg-primary" id="cropZoomConfidence">-</span>
+                  </div>
+                </div>
+                <div class="col-md-7">
+                  <div class="description-panel">
+                    <h6 class="description-title"><i class="bi bi-file-text me-2"></i>Analisis Deteksi</h6>
+                    <div class="description-content" id="cropZoomDescription">
+                      <!-- Deskripsi akan diisi oleh JavaScript -->
+                    </div>
+                  </div>
+                </div>
               </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
             </div>
           </div>
         </div>

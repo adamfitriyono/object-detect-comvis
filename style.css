@@ -1418,8 +1418,12 @@ html {
 }
 
 #cropZoomImage {
-  max-height: 60vh;
+  max-height: 50vh;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.crop-zoom-img {
+  border: 3px solid #e9ecef;
 }
 
 .crop-zoom-info {
@@ -1429,6 +1433,54 @@ html {
 .crop-zoom-info .badge {
   font-size: 1rem;
   padding: 0.5rem 1.5rem;
+}
+
+/* Description Panel in Modal */
+.description-panel {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  height: 100%;
+  box-shadow: var(--card-shadow);
+  border-left: 4px solid #0d6efd;
+}
+
+.description-title {
+  color: #0d6efd;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.description-content {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: #495057;
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+.description-content strong {
+  color: #212529;
+}
+
+/* Crop Card Description */
+.crop-card-desc {
+  padding: 0.5rem 0.75rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  text-align: center;
+}
+
+.crop-card-desc small {
+  font-size: 0.75rem;
+  display: block;
+}
+
+#cropZoomModal .modal-footer {
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
 }
 
 .badge-modern {
@@ -1618,5 +1670,24 @@ html {
 
   .crop-hover-overlay span {
     font-size: 0.75rem;
+  }
+
+  /* Responsive Modal */
+  #cropZoomModal .modal-body {
+    padding: 1rem;
+  }
+
+  .description-panel {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+
+  .description-content {
+    max-height: 30vh;
+    font-size: 0.9rem;
+  }
+
+  #cropZoomImage {
+    max-height: 35vh;
   }
 }

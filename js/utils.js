@@ -261,12 +261,12 @@ function drawConfidenceHeatmap(ctx, detections, canvasWidth, canvasHeight) {
       const centerX = detection.x + detection.width / 2;
       const centerY = detection.y + detection.height / 2;
 
-      // Radius lebih besar untuk coverage lebih luas
-      const radius = Math.max(detection.width, detection.height) * 1.2;
+      // Radius sesuai ukuran bounding box (tidak terlalu besar)
+      const radius = Math.max(detection.width, detection.height) * 0.7;
 
       // Confidence score (0-1) menentukan opacity dan intensitas
       const confidence = detection.confidence;
-      const opacity = Math.min(confidence * 0.9, 0.85); // Max opacity 85%
+      const opacity = Math.min(confidence * 0.75, 0.75); // Max opacity 75%
 
       // Warna berdasarkan confidence: merah untuk tinggi, kuning untuk sedang
       let r, g, b;
@@ -290,10 +290,10 @@ function drawConfidenceHeatmap(ctx, detections, canvasWidth, canvasHeight) {
       // Buat radial gradient
       const gradient = heatmapCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
 
-      // Gradient dari center (opaque) ke edge (transparent) - lebih tebal
+      // Gradient dari center (opaque) ke edge (transparent)
       gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity})`);
-      gradient.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${opacity * 0.8})`);
-      gradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, ${opacity * 0.5})`);
+      gradient.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${opacity * 0.5})`);
+      gradient.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${opacity * 0.2})`);
       gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
       // Gambar circle dengan gradient
@@ -304,7 +304,7 @@ function drawConfidenceHeatmap(ctx, detections, canvasWidth, canvasHeight) {
     });
   }
 
-  // Draw heatmap ke canvas utama dengan blend mode overlay untuk warna lebih tebal
+  // Draw heatmap ke canvas utama dengan blend mode
   ctx.save();
   ctx.globalCompositeOperation = 'overlay';
   ctx.drawImage(heatmapCanvas, 0, 0);
