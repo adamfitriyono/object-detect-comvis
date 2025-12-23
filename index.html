@@ -206,8 +206,20 @@
             <h2 class="card-title h5 mb-0"><i class="bi bi-check-circle-fill me-2"></i>Hasil Deteksi</h2>
           </div>
           <div class="card-body">
-            <div class="result-image-wrapper mb-4">
-              <canvas id="resultCanvas" class="result-canvas-enhanced"></canvas>
+            <!-- Stacked Canvas: Bounding Box & Heatmap -->
+            <div class="row g-4 mb-4">
+              <div class="col-12">
+                <div class="result-image-wrapper">
+                  <div class="result-image-label"><i class="bi bi-bounding-box me-2"></i>Deteksi Objek</div>
+                  <canvas id="resultCanvas" class="result-canvas-enhanced"></canvas>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="result-image-wrapper heatmap-wrapper">
+                  <div class="result-image-label"><i class="bi bi-fire me-2"></i>Heatmap (Alasan Deteksi)</div>
+                  <canvas id="heatmapCanvas" class="result-canvas-enhanced"></canvas>
+                </div>
+              </div>
             </div>
 
             <div class="row g-3 mb-4">
@@ -256,13 +268,45 @@
               </div>
             </div>
 
+            <!-- Gallery Cropped Images -->
+            <div class="cropped-gallery-section mb-4">
+              <div class="info-card-modern">
+                <div class="card-body">
+                  <div class="info-card-header mb-3">
+                    <i class="bi bi-images info-icon"></i>
+                    <h5 class="card-title mb-0">Bukti Deteksi (Cropped)</h5>
+                  </div>
+                  <div id="croppedGallery" class="cropped-gallery">
+                    <p class="text-muted text-center mb-0" id="noDetectionMsg">Tidak ada lubang terdeteksi</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="button-group-modern">
-              <button id="toggleHeatmapBtn" class="btn btn-gradient-secondary btn-action"><i class="bi bi-eye me-2"></i>Tampilkan Heatmap</button>
               <button id="detectAgainBtn" class="btn btn-gradient-primary btn-action"><i class="bi bi-arrow-clockwise me-2"></i>Deteksi Lagi</button>
             </div>
           </div>
         </div>
       </section>
+
+      <!-- Modal untuk Zoom Cropped Image -->
+      <div class="modal fade" id="cropZoomModal" tabindex="-1" aria-labelledby="cropZoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cropZoomModalLabel"><i class="bi bi-zoom-in me-2"></i>Detail Deteksi</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+              <img id="cropZoomImage" src="" alt="Cropped Detection" class="img-fluid rounded" />
+              <div class="crop-zoom-info mt-3">
+                <span class="badge bg-primary" id="cropZoomConfidence">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Footer -->
