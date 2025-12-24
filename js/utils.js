@@ -128,33 +128,7 @@ function resizeImage(imageData, targetWidth, targetHeight) {
   return tempCanvas;
 }
 
-// Fungsi untuk preprocess image untuk model YOLO
-function preprocessImage(canvas, targetWidth = 416, targetHeight = 416) {
-  const ctx = canvas.getContext('2d');
-  const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight);
-  const data = imageData.data;
-
-  // Buat array untuk input model [1, 3, 416, 416]
-  // Format: [batch, channels (RGB), height, width]
-  const input = new Float32Array(1 * 3 * targetHeight * targetWidth);
-
-  // Normalisasi pixel values ke range [0, 1] dan ubah format dari RGBA ke RGB
-  for (let i = 0; i < targetHeight; i++) {
-    for (let j = 0; j < targetWidth; j++) {
-      const pixelIndex = (i * targetWidth + j) * 4; // RGBA format
-      const tensorIndex = i * targetWidth + j;
-
-      // Red channel
-      input[tensorIndex] = data[pixelIndex] / 255.0;
-      // Green channel
-      input[targetWidth * targetHeight + tensorIndex] = data[pixelIndex + 1] / 255.0;
-      // Blue channel
-      input[2 * targetWidth * targetHeight + tensorIndex] = data[pixelIndex + 2] / 255.0;
-    }
-  }
-
-  return input;
-}
+// Note: preprocessImage() didefinisikan di modelLoader.js untuk YOLOv8
 
 // Fungsi untuk menggambar bounding box pada canvas
 function drawBoundingBox(ctx, x, y, width, height, label, confidence, color = '#00FF00') {
@@ -243,10 +217,152 @@ function getRandomColor() {
   return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Fungsi untuk membuat confidence heatmap overlay
-// Ini adalah alternatif praktis untuk Grad-CAM yang menunjukkan area dengan confidence tinggi
-function drawConfidenceHeatmap(ctx, detections, canvasWidth, canvasHeight) {
-  if (!detections || detections.length === 0) return;
+// Fungsi untuk menganalisis intensitas pixel (darkness) dalam bounding box
+// Lubang yang lebih dalam biasanya lebih gelap karena shadow
+function analyzePotholeDepth(canvas, detection) {
+  try {
+    const ctx = canvas.getContext('2d');
+
+    // Pastikan koordinat dalam batas canvas
+    const x = Math.max(0, Math.floor(detection.x));
+    const y = Math.max(0, Math.floor(detection.y));
+    const width = Math.min(canvas.width - x, Math.floor(detection.width));
+    const height = Math.min(canvas.height - y, Math.floor(detection.height));
+
+    if (width <= 0 || height <= 0) {
+      return 0.5; // Default jika area tidak valid
+    }
+
+    // Ekstrak image data dari area bounding box
+    const imageData = ctx.getImageData(x, y, width, height);
+    const data = imageData.data;
+
+    // Hitung rata-rata brightness (grayscale)
+    let totalBrightness = 0;
+    let pixelCount = 0;
+
+    for (let i = 0; i < data.length; i += 4) {
+      // Konversi RGB ke grayscale menggunakan formula luminance
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const brightness = (0.299 * r + 0.587 * g + 0.114 * b) / 255.0;
+
+      totalBrightness += brightness;
+      pixelCount++;
+    }
+
+    if (pixelCount === 0) {
+      return 0.5; // Default jika tidak ada pixel
+    }
+
+    const avgBrightness = totalBrightness / pixelCount;
+
+    // Return darkness (0 = terang, 1 = gelap)
+    // Invert brightness untuk mendapatkan darkness
+    return 1 - avgBrightness;
+  } catch (error) {
+    console.error('Error analyzing pothole depth:', error);
+    return 0.5; // Default jika error
+  }
+}
+
+// Fungsi untuk normalisasi ukuran bounding box
+// Lubang yang lebih besar mungkin lebih dalam
+function normalizeBoxSize(detection, canvasWidth, canvasHeight) {
+  const boxArea = detection.width * detection.height;
+  const canvasArea = canvasWidth * canvasHeight;
+
+  if (canvasArea === 0) {
+    return 0;
+  }
+
+  // Normalisasi ke 0-1, dengan batas maksimal (misalnya 20% dari canvas)
+  const normalizedSize = Math.min(boxArea / canvasArea, 0.2) / 0.2;
+
+  return normalizedSize;
+}
+
+// Fungsi untuk menghitung skor kedalaman komposit
+// Menggabungkan intensity (darkness), size, dan confidence
+function calculateDepthScore(detection, canvas, canvasWidth, canvasHeight) {
+  // Weight untuk masing-masing faktor
+  const intensityWeight = 0.5; // 50% - faktor utama
+  const sizeWeight = 0.3; // 30% - ukuran lubang
+  const confidenceWeight = 0.2; // 20% - confidence deteksi
+
+  // Analisis intensitas (darkness)
+  const darkness = analyzePotholeDepth(canvas, detection);
+
+  // Normalisasi ukuran
+  const normalizedSize = normalizeBoxSize(detection, canvasWidth, canvasHeight);
+
+  // Confidence score (sudah 0-1)
+  const confidence = detection.confidence;
+
+  // Hitung skor komposit
+  const depthScore = intensityWeight * darkness + sizeWeight * normalizedSize + confidenceWeight * confidence;
+
+  // Clamp ke 0-1
+  return Math.max(0, Math.min(1, depthScore));
+}
+
+// Fungsi untuk mapping depthScore ke warna (biru → kuning → merah)
+function getDepthColor(depthScore) {
+  // Clamp depthScore ke 0-1
+  const score = Math.max(0, Math.min(1, depthScore));
+
+  let r, g, b;
+
+  if (score < 0.33) {
+    // Biru → Cyan (0.0 → 0.33)
+    const t = score / 0.33;
+    r = 0;
+    g = Math.floor(255 * t);
+    b = 255;
+  } else if (score < 0.66) {
+    // Cyan → Kuning (0.33 → 0.66)
+    const t = (score - 0.33) / 0.33;
+    r = Math.floor(255 * t);
+    g = 255;
+    b = Math.floor(255 * (1 - t));
+  } else {
+    // Kuning → Merah (0.66 → 1.0)
+    const t = (score - 0.66) / 0.34;
+    r = 255;
+    g = Math.floor(255 * (1 - t));
+    b = 0;
+  }
+
+  return { r, g, b };
+}
+
+// Helper function untuk menggambar radial gradient heatmap
+function drawRadialGradientHeatmap(heatmapCtx, detection, originalCanvas, canvasWidth, canvasHeight, radiusMultiplier, opacityMultiplier, colorStops) {
+  const depthScore = calculateDepthScore(detection, originalCanvas, canvasWidth, canvasHeight);
+  const color = getDepthColor(depthScore);
+  const centerX = detection.x + detection.width / 2;
+  const centerY = detection.y + detection.height / 2;
+  const radius = Math.max(detection.width, detection.height) * radiusMultiplier;
+  const opacity = opacityMultiplier(depthScore);
+
+  const gradient = heatmapCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+
+  // Apply color stops
+  colorStops.forEach((stop) => {
+    gradient.addColorStop(stop.position, `rgba(${color.r}, ${color.g}, ${color.b}, ${stop.opacity * opacity})`);
+  });
+
+  heatmapCtx.fillStyle = gradient;
+  heatmapCtx.beginPath();
+  heatmapCtx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  heatmapCtx.fill();
+}
+
+// Fungsi untuk membuat depth heatmap overlay
+// Menunjukkan intensitas kedalaman lubang dengan gradasi warna biru → kuning → merah
+function drawDepthHeatmap(ctx, detections, canvasWidth, canvasHeight, originalCanvas) {
+  if (!detections || detections.length === 0 || !originalCanvas) return;
 
   // Buat temporary canvas untuk heatmap
   const heatmapCanvas = document.createElement('canvas');
@@ -254,63 +370,46 @@ function drawConfidenceHeatmap(ctx, detections, canvasWidth, canvasHeight) {
   heatmapCanvas.height = canvasHeight;
   const heatmapCtx = heatmapCanvas.getContext('2d');
 
-  // Gambar setiap deteksi sebagai radial gradient (seperti Grad-CAM)
-  // Render 2 kali untuk intensitas lebih kuat
-  for (let layer = 0; layer < 2; layer++) {
-    detections.forEach((detection) => {
-      const centerX = detection.x + detection.width / 2;
-      const centerY = detection.y + detection.height / 2;
+  // Untuk setiap deteksi, gambar heatmap utama
+  detections.forEach((detection) => {
+    drawRadialGradientHeatmap(
+      heatmapCtx,
+      detection,
+      originalCanvas,
+      canvasWidth,
+      canvasHeight,
+      0.7, // radius multiplier
+      (depthScore) => 0.4 + depthScore * 0.4, // opacity: 0.4 - 0.8
+      [
+        { position: 0, opacity: 1.0 },
+        { position: 0.3, opacity: 0.8 },
+        { position: 0.6, opacity: 0.5 },
+        { position: 1, opacity: 0 },
+      ]
+    );
+  });
 
-      // Radius sesuai ukuran bounding box (tidak terlalu besar)
-      const radius = Math.max(detection.width, detection.height) * 0.7;
+  // Apply smoothing dengan multiple passes (simple blur effect)
+  detections.forEach((detection) => {
+    drawRadialGradientHeatmap(
+      heatmapCtx,
+      detection,
+      originalCanvas,
+      canvasWidth,
+      canvasHeight,
+      0.9, // radius multiplier (lebih besar untuk smoothing)
+      (depthScore) => (0.2 + depthScore * 0.2) * 0.5, // opacity lebih rendah untuk smoothing
+      [
+        { position: 0, opacity: 1.0 },
+        { position: 0.5, opacity: 0.3 },
+        { position: 1, opacity: 0 },
+      ]
+    );
+  });
 
-      // Confidence score (0-1) menentukan opacity dan intensitas
-      const confidence = detection.confidence;
-      const opacity = Math.min(confidence * 0.75, 0.75); // Max opacity 75%
-
-      // Warna berdasarkan confidence: merah untuk tinggi, kuning untuk sedang
-      let r, g, b;
-      if (confidence > 0.7) {
-        // High confidence: merah terang
-        r = 255;
-        g = 50;
-        b = 50;
-      } else if (confidence > 0.5) {
-        // Medium confidence: orange
-        r = 255;
-        g = 120;
-        b = 0;
-      } else {
-        // Low confidence: kuning
-        r = 255;
-        g = 200;
-        b = 50;
-      }
-
-      // Buat radial gradient
-      const gradient = heatmapCtx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-
-      // Gradient dari center (opaque) ke edge (transparent)
-      gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity})`);
-      gradient.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${opacity * 0.5})`);
-      gradient.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${opacity * 0.2})`);
-      gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-
-      // Gambar circle dengan gradient
-      heatmapCtx.fillStyle = gradient;
-      heatmapCtx.beginPath();
-      heatmapCtx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      heatmapCtx.fill();
-    });
-  }
-
-  // Draw heatmap ke canvas utama dengan blend mode
+  // Draw heatmap ke canvas utama dengan blend mode 'overlay' untuk efek yang lebih natural
   ctx.save();
   ctx.globalCompositeOperation = 'overlay';
-  ctx.drawImage(heatmapCanvas, 0, 0);
-  // Tambah layer kedua dengan multiply untuk intensitas extra
-  ctx.globalCompositeOperation = 'multiply';
-  ctx.globalAlpha = 0.3;
   ctx.drawImage(heatmapCanvas, 0, 0);
   ctx.restore();
 }

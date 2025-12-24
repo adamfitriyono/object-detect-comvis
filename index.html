@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="id">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deteksi Jalan Berlubang</title>
-
+    
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-
+    
     <!-- Leaflet CSS untuk Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
-  </head>
+</head>
   <body class="d-flex flex-column min-vh-100">
     <!-- Header Banner -->
     <header class="header-banner">
@@ -61,8 +61,8 @@
           <div class="step-label">Hasil</div>
         </div>
       </div>
-
-      <!-- SECTION 1: FORM LOKASI -->
+        
+        <!-- SECTION 1: FORM LOKASI -->
       <section id="location-section" class="mb-4 section-enhanced">
         <div class="card-modern card-location">
           <div class="card-header-modern card-header-location">
@@ -75,7 +75,7 @@
                 <span class="input-icon"><i class="bi bi-geo-alt"></i></span>
                 <input type="text" class="form-control form-control-lg input-enhanced" id="addressInput" placeholder="Ketik alamat (contoh: Jalan Imam Bonjol)" autocomplete="off" />
               </div>
-              <div id="addressSuggestions" class="suggestions"></div>
+                <div id="addressSuggestions" class="suggestions"></div>
             </div>
 
             <div class="row g-3 mb-4">
@@ -123,7 +123,7 @@
                     <input type="text" class="form-control input-enhanced" id="city" readonly />
                   </div>
                 </div>
-              </div>
+                </div>
             </div>
 
             <!-- Koordinat -->
@@ -144,7 +144,7 @@
                     <input type="text" class="form-control input-enhanced" id="longitude" readonly />
                   </div>
                 </div>
-              </div>
+                </div>
             </div>
 
             <!-- Map Preview -->
@@ -154,9 +154,9 @@
             </div>
           </div>
         </div>
-      </section>
+        </section>
 
-      <!-- SECTION 2: KAMERA & DETEKSI -->
+        <!-- SECTION 2: KAMERA & DETEKSI -->
       <section id="camera-section" class="mb-4 section-enhanced">
         <div class="card-modern card-camera">
           <div class="card-header-modern card-header-camera">
@@ -196,30 +196,18 @@
               </div>
             </div>
           </div>
-        </div>
-      </section>
+            </div>
+        </section>
 
-      <!-- SECTION 3: HASIL DETEKSI -->
+        <!-- SECTION 3: HASIL DETEKSI -->
       <section id="result-section" class="result-section mb-4 section-enhanced" style="display: none">
         <div class="card-modern card-result">
           <div class="card-header-modern card-header-result">
             <h2 class="card-title h5 mb-0"><i class="bi bi-check-circle-fill me-2"></i>Hasil Deteksi</h2>
           </div>
           <div class="card-body">
-            <!-- Stacked Canvas: Bounding Box & Heatmap -->
-            <div class="row g-4 mb-4">
-              <div class="col-12">
-                <div class="result-image-wrapper">
-                  <div class="result-image-label"><i class="bi bi-bounding-box me-2"></i>Deteksi Objek</div>
-                  <canvas id="resultCanvas" class="result-canvas-enhanced"></canvas>
-                </div>
-              </div>
-              <div class="col-12">
-                <div class="result-image-wrapper heatmap-wrapper">
-                  <div class="result-image-label"><i class="bi bi-fire me-2"></i>Heatmap (Alasan Deteksi)</div>
-                  <canvas id="heatmapCanvas" class="result-canvas-enhanced"></canvas>
-                </div>
-              </div>
+            <div class="result-image-wrapper mb-4">
+              <canvas id="resultCanvas" class="result-canvas-enhanced"></canvas>
             </div>
 
             <div class="row g-3 mb-4">
@@ -242,7 +230,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+                </div>
 
               <div class="col-md-6">
                 <div class="info-card-modern h-100">
@@ -265,63 +253,16 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <!-- Gallery Cropped Images -->
-            <div class="cropped-gallery-section mb-4">
-              <div class="info-card-modern">
-                <div class="card-body">
-                  <div class="info-card-header mb-3">
-                    <i class="bi bi-images info-icon"></i>
-                    <h5 class="card-title mb-0">Bukti Deteksi (Cropped)</h5>
-                  </div>
-                  <div id="croppedGallery" class="cropped-gallery">
-                    <p class="text-muted text-center mb-0" id="noDetectionMsg">Tidak ada lubang terdeteksi</p>
-                  </div>
                 </div>
-              </div>
             </div>
 
             <div class="button-group-modern">
+              <button id="toggleHeatmapBtn" class="btn btn-gradient-secondary btn-action"><i class="bi bi-eye me-2"></i>Tampilkan Heatmap</button>
               <button id="detectAgainBtn" class="btn btn-gradient-primary btn-action"><i class="bi bi-arrow-clockwise me-2"></i>Deteksi Lagi</button>
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- Modal untuk Zoom Cropped Image -->
-      <div class="modal fade" id="cropZoomModal" tabindex="-1" aria-labelledby="cropZoomModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="cropZoomModalLabel"><i class="bi bi-zoom-in me-2"></i>Detail Deteksi</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="row g-4">
-                <div class="col-md-5 text-center">
-                  <img id="cropZoomImage" src="" alt="Cropped Detection" class="img-fluid rounded crop-zoom-img" />
-                  <div class="crop-zoom-info mt-3">
-                    <span class="badge bg-primary" id="cropZoomConfidence">-</span>
-                  </div>
-                </div>
-                <div class="col-md-7">
-                  <div class="description-panel">
-                    <h6 class="description-title"><i class="bi bi-file-text me-2"></i>Analisis Deteksi</h6>
-                    <div class="description-content" id="cropZoomDescription">
-                      <!-- Deskripsi akan diisi oleh JavaScript -->
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            </div>
-          </div>
-        </div>
-      </div>
+        </section>
     </div>
 
     <!-- Footer -->
@@ -373,7 +314,7 @@
 
     <!-- ONNX Runtime -->
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.min.js"></script>
-
+    
     <!-- Leaflet JS untuk Map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -383,5 +324,5 @@
     <script src="js/modelLoader.js"></script>
     <script src="js/camera.js"></script>
     <script src="app.js"></script>
-  </body>
+</body>
 </html>
