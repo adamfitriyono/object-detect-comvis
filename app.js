@@ -5,7 +5,6 @@
 
 // Global state
 let detectionResults = null;
-let showHeatmap = false; // Toggle untuk heatmap visualization
 let lastDetectionCanvas = null; // Simpan canvas original untuk re-render
 let lastDetections = null; // Simpan detections untuk re-render
 
@@ -88,7 +87,7 @@ async function runDetection(canvas) {
   }
 }
 
-// Fungsi untuk re-render canvas dengan/ tanpa heatmap
+// Fungsi untuk re-render canvas (tidak lagi diperlukan toggle, tapi tetap ada untuk konsistensi)
 function rerenderDetectionResults() {
   if (!lastDetectionCanvas || !lastDetections) return;
 
@@ -101,14 +100,8 @@ function rerenderDetectionResults() {
   // Draw original image
   ctx.drawImage(lastDetectionCanvas, 0, 0);
 
-  // Draw confidence heatmap jika toggle aktif (sebelum bounding boxes)
-  if (showHeatmap && lastDetections.length > 0) {
-    drawConfidenceHeatmap(ctx, lastDetections, resultCanvas.width, resultCanvas.height);
-  }
-
   // Draw bounding boxes untuk setiap deteksi
   lastDetections.forEach((detection, index) => {
-    // Gunakan warna yang berbeda untuk setiap deteksi
     const colors = ['#00FF00', '#FF6B6B', '#4ECDC4', '#FFD93D', '#6BCF7F'];
     const color = colors[index % colors.length];
 
@@ -151,7 +144,7 @@ function displayDetectionResults(originalCanvas, detections) {
   // Update step indicator to step 3
   updateStepIndicator(3);
 
-  // Get result canvas
+  // === CANVAS 1: Bounding Box Detection ===
   const resultCanvas = document.getElementById('resultCanvas');
   const ctx = resultCanvas.getContext('2d');
 
@@ -162,11 +155,6 @@ function displayDetectionResults(originalCanvas, detections) {
   // Draw original image
   ctx.drawImage(originalCanvas, 0, 0);
 
-  // Draw confidence heatmap jika toggle aktif (sebelum bounding boxes)
-  if (showHeatmap && detections.length > 0) {
-    drawConfidenceHeatmap(ctx, detections, resultCanvas.width, resultCanvas.height);
-  }
-
   // Draw bounding boxes untuk setiap deteksi
   detections.forEach((detection, index) => {
     // Gunakan warna yang berbeda untuk setiap deteksi
@@ -175,6 +163,25 @@ function displayDetectionResults(originalCanvas, detections) {
 
     drawBoundingBox(ctx, detection.x, detection.y, detection.width, detection.height, detection.label, detection.confidence, color);
   });
+
+  // === CANVAS 2: Heatmap Visualization ===
+  const heatmapCanvas = document.getElementById('heatmapCanvas');
+  const heatmapCtx = heatmapCanvas.getContext('2d');
+
+  // Set canvas size sama dengan original
+  heatmapCanvas.width = originalCanvas.width;
+  heatmapCanvas.height = originalCanvas.height;
+
+  // Draw original image sebagai background
+  heatmapCtx.drawImage(originalCanvas, 0, 0);
+
+  // Draw detection density heatmap overlay jika ada deteksi
+  if (detections.length > 0) {
+    drawDetectionDensityHeatmap(heatmapCtx, originalCanvas, detections, heatmapCanvas.width, heatmapCanvas.height);
+  }
+
+  // === Generate Cropped Images Gallery ===
+  generateCroppedImages(originalCanvas, detections);
 
   // Update info
   document.getElementById('potholeCount').textContent = detections.length;
@@ -185,30 +192,131 @@ function displayDetectionResults(originalCanvas, detections) {
   document.getElementById('resultAddress').textContent = locationData.address || '-';
   document.getElementById('resultCoordinates').textContent = locationData.latitude && locationData.longitude ? `${locationData.latitude.toFixed(6)}, ${locationData.longitude.toFixed(6)}` : '-';
 
-  // Update toggle button text
-  updateHeatmapToggleButton();
-
   // Scroll to result
   resultSection.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Fungsi untuk update toggle button text
-function updateHeatmapToggleButton() {
-  const toggleBtn = document.getElementById('toggleHeatmapBtn');
-  if (toggleBtn) {
-    if (showHeatmap) {
-      toggleBtn.innerHTML = '<i class="bi bi-eye-slash me-2"></i>Sembunyikan Heatmap';
-      toggleBtn.classList.remove('btn-secondary');
-      toggleBtn.classList.add('btn-success');
-    } else {
-      toggleBtn.innerHTML = '<i class="bi bi-eye me-2"></i>Tampilkan Heatmap';
-      toggleBtn.classList.remove('btn-success');
-      toggleBtn.classList.add('btn-secondary');
-    }
+// Fungsi untuk generate cropped images dari setiap deteksi
+function generateCroppedImages(originalCanvas, detections) {
+  const gallery = document.getElementById('croppedGallery');
+  const noDetectionMsg = document.getElementById('noDetectionMsg');
+
+  // Clear existing content
+  gallery.innerHTML = '';
+
+  if (detections.length === 0) {
+    // Tampilkan pesan tidak ada deteksi
+    gallery.innerHTML = '<p class="text-muted text-center mb-0">Tidak ada lubang terdeteksi</p>';
+    return;
   }
+
+  // Loop setiap deteksi dan buat cropped image
+  detections.forEach((detection, index) => {
+    // Buat canvas untuk crop
+    const cropCanvas = document.createElement('canvas');
+    const cropCtx = cropCanvas.getContext('2d');
+
+    // Tambah padding untuk context
+    const padding = 20;
+    const cropX = Math.max(0, detection.x - padding);
+    const cropY = Math.max(0, detection.y - padding);
+    const cropWidth = Math.min(detection.width + padding * 2, originalCanvas.width - cropX);
+    const cropHeight = Math.min(detection.height + padding * 2, originalCanvas.height - cropY);
+
+    cropCanvas.width = cropWidth;
+    cropCanvas.height = cropHeight;
+
+    // Crop dari original canvas
+    cropCtx.drawImage(
+      originalCanvas,
+      cropX,
+      cropY,
+      cropWidth,
+      cropHeight, // source
+      0,
+      0,
+      cropWidth,
+      cropHeight // destination
+    );
+
+    // Convert ke data URL
+    const croppedDataUrl = cropCanvas.toDataURL('image/png');
+
+    // Tentukan warna badge berdasarkan confidence
+    let badgeClass = 'bg-success';
+    if (detection.confidence < 0.5) {
+      badgeClass = 'bg-warning text-dark';
+    } else if (detection.confidence < 0.7) {
+      badgeClass = 'bg-info';
+    }
+
+    // Buat card element
+    const cropCard = document.createElement('div');
+    cropCard.className = 'crop-card';
+    cropCard.innerHTML = `
+      <div class="crop-card-inner">
+        <img src="${croppedDataUrl}" alt="Deteksi ${index + 1}" class="crop-image" />
+        <div class="crop-overlay">
+          <span class="crop-number">#${index + 1}</span>
+          <span class="badge ${badgeClass} crop-confidence">${(detection.confidence * 100).toFixed(1)}%</span>
+        </div>
+        <div class="crop-hover-overlay">
+          <i class="bi bi-zoom-in"></i>
+          <span>Klik untuk zoom</span>
+        </div>
+      </div>
+    `;
+
+    // Generate explanation untuk deteksi ini (untuk modal)
+    const explanation = generateExplanation(detection, originalCanvas.width, originalCanvas.height);
+
+    // Buat wrapper untuk card dengan status sederhana
+    const cardWrapper = document.createElement('div');
+    cardWrapper.className = 'crop-card-wrapper';
+
+    // Update crop card untuk clickable
+    const imageArea = cropCard.querySelector('.crop-card-inner');
+    imageArea.style.cursor = 'pointer';
+
+    // Add click event untuk modal zoom
+    imageArea.addEventListener('click', function (e) {
+      e.stopPropagation();
+      showCropZoomModal(croppedDataUrl, detection.confidence, index + 1, explanation);
+    });
+
+    // Buat status bar sederhana (icon + confidence)
+    const statusBar = document.createElement('div');
+    statusBar.className = 'crop-status-bar';
+    statusBar.innerHTML = `
+      <i class="bi bi-check-circle-fill me-1"></i>
+      <span>${(detection.confidence * 100).toFixed(1)}%</span>
+    `;
+
+    // Append card dan status bar
+    cardWrapper.appendChild(cropCard);
+    cardWrapper.appendChild(statusBar);
+
+    gallery.appendChild(cardWrapper);
+  });
 }
 
-// Setup event listener untuk tombol "Deteksi Lagi" dan "Toggle Heatmap"
+// Fungsi untuk menampilkan modal zoom
+function showCropZoomModal(imageUrl, confidence, detectionNumber, explanation) {
+  const modal = new bootstrap.Modal(document.getElementById('cropZoomModal'));
+  const modalImage = document.getElementById('cropZoomImage');
+  const modalTitle = document.getElementById('cropZoomModalLabel');
+  const modalConfidence = document.getElementById('cropZoomConfidence');
+  const modalExplanation = document.getElementById('cropZoomExplanation');
+
+  modalImage.src = imageUrl;
+  modalTitle.innerHTML = `<i class="bi bi-zoom-in me-2"></i>Detail Deteksi #${detectionNumber}`;
+  modalConfidence.textContent = `Confidence: ${(confidence * 100).toFixed(1)}%`;
+  modalExplanation.textContent = explanation || 'Penjelasan tidak tersedia.';
+
+  modal.show();
+}
+
+// Setup event listener untuk tombol "Deteksi Lagi"
 document.addEventListener('DOMContentLoaded', function () {
   const detectAgainBtn = document.getElementById('detectAgainBtn');
 
@@ -229,16 +337,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Scroll to camera section
         cameraSection.scrollIntoView({ behavior: 'smooth' });
       }
-    });
-  }
-
-  // Setup toggle heatmap button
-  const toggleHeatmapBtn = document.getElementById('toggleHeatmapBtn');
-  if (toggleHeatmapBtn) {
-    toggleHeatmapBtn.addEventListener('click', function () {
-      showHeatmap = !showHeatmap;
-      updateHeatmapToggleButton();
-      rerenderDetectionResults();
     });
   }
 });
