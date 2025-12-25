@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deteksi Jalan Berlubang</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-    
+
     <!-- Leaflet CSS untuk Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
-</head>
+  </head>
   <body class="d-flex flex-column min-vh-100">
     <!-- Header Banner -->
     <header class="header-banner">
@@ -61,8 +61,8 @@
           <div class="step-label">Hasil</div>
         </div>
       </div>
-        
-        <!-- SECTION 1: FORM LOKASI -->
+
+      <!-- SECTION 1: FORM LOKASI -->
       <section id="location-section" class="mb-4 section-enhanced">
         <div class="card-modern card-location">
           <div class="card-header-modern card-header-location">
@@ -75,7 +75,7 @@
                 <span class="input-icon"><i class="bi bi-geo-alt"></i></span>
                 <input type="text" class="form-control form-control-lg input-enhanced" id="addressInput" placeholder="Ketik alamat (contoh: Jalan Imam Bonjol)" autocomplete="off" />
               </div>
-                <div id="addressSuggestions" class="suggestions"></div>
+              <div id="addressSuggestions" class="suggestions"></div>
             </div>
 
             <div class="row g-3 mb-4">
@@ -123,7 +123,7 @@
                     <input type="text" class="form-control input-enhanced" id="city" readonly />
                   </div>
                 </div>
-                </div>
+              </div>
             </div>
 
             <!-- Koordinat -->
@@ -144,7 +144,7 @@
                     <input type="text" class="form-control input-enhanced" id="longitude" readonly />
                   </div>
                 </div>
-                </div>
+              </div>
             </div>
 
             <!-- Map Preview -->
@@ -154,9 +154,9 @@
             </div>
           </div>
         </div>
-        </section>
+      </section>
 
-        <!-- SECTION 2: KAMERA & DETEKSI -->
+      <!-- SECTION 2: KAMERA & DETEKSI -->
       <section id="camera-section" class="mb-4 section-enhanced">
         <div class="card-modern card-camera">
           <div class="card-header-modern card-header-camera">
@@ -196,10 +196,10 @@
               </div>
             </div>
           </div>
-            </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- SECTION 3: HASIL DETEKSI -->
+      <!-- SECTION 3: HASIL DETEKSI -->
       <section id="result-section" class="result-section mb-4 section-enhanced" style="display: none">
         <div class="card-modern card-result">
           <div class="card-header-modern card-header-result">
@@ -238,7 +238,7 @@
                     </div>
                   </div>
                 </div>
-                </div>
+              </div>
 
               <div class="col-md-6">
                 <div class="info-card-modern h-100">
@@ -261,7 +261,7 @@
                     </div>
                   </div>
                 </div>
-                </div>
+              </div>
             </div>
 
             <!-- Gallery Cropped Images -->
@@ -284,7 +284,6 @@
             </div>
           </div>
         </div>
-<<<<<<< HEAD
       </section>
 
       <!-- Modal untuk Zoom Cropped Image -->
@@ -313,9 +312,6 @@
           </div>
         </div>
       </div>
-=======
-        </section>
->>>>>>> 84cc38b65ef2c1fe13ce705fd6eb5d696b197424
     </div>
 
     <!-- Footer -->
@@ -367,7 +363,7 @@
 
     <!-- ONNX Runtime -->
     <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/ort.min.js"></script>
-    
+
     <!-- Leaflet JS untuk Map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -377,5 +373,5 @@
     <script src="js/modelLoader.js"></script>
     <script src="js/camera.js"></script>
     <script src="app.js"></script>
-</body>
+  </body>
 </html>
