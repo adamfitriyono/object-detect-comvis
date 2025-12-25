@@ -144,13 +144,16 @@ function displayDetectionResults(originalCanvas, detections) {
   // Update step indicator to step 3
   updateStepIndicator(3);
 
-  // === CANVAS 1: Bounding Box Detection ===
+  // Get result canvas
   const resultCanvas = document.getElementById('resultCanvas');
   const ctx = resultCanvas.getContext('2d');
 
   // Set canvas size
   resultCanvas.width = originalCanvas.width;
   resultCanvas.height = originalCanvas.height;
+
+  // Draw original image
+  ctx.drawImage(originalCanvas, 0, 0);
 
   // Draw original image
   ctx.drawImage(originalCanvas, 0, 0);
@@ -194,6 +197,9 @@ function displayDetectionResults(originalCanvas, detections) {
 
   // Scroll to result
   resultSection.scrollIntoView({ behavior: 'smooth' });
+
+  // Update toggle button text
+  updateHeatmapToggleButton();
 }
 
 // Fungsi untuk generate cropped images dari setiap deteksi
