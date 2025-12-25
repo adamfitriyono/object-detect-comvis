@@ -198,8 +198,7 @@ function displayDetectionResults(originalCanvas, detections) {
   // Scroll to result
   resultSection.scrollIntoView({ behavior: 'smooth' });
 
-  // Update toggle button text
-  updateHeatmapToggleButton();
+  // (Removed orphaned call to updateHeatmapToggleButton)
 }
 
 // Fungsi untuk generate cropped images dari setiap deteksi
