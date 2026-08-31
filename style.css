@@ -1,22 +1,89 @@
 /* Custom Styles untuk complement Bootstrap */
 
-/* CSS Variables untuk Theming */
+/* CSS Variables para Theming */
 :root {
+  /* Gradient palette */
   --primary-gradient: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
   --success-gradient: linear-gradient(135deg, #198754 0%, #146c43 100%);
   --info-gradient: linear-gradient(135deg, #0dcaf0 0%, #0aa2c0 100%);
   --secondary-gradient: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+
+  /* Shadows & geometry */
   --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
   --card-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
   --border-radius: 0.75rem;
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Semantic tokens – light mode defaults */
+  --bg-page: #f8f9fa;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f8f9fa;
+  --bg-input: #ffffff;
+  --bg-input-readonly: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #495057;
+  --text-muted-custom: #6c757d;
+  --border-color: #e9ecef;
+  --step-inactive-bg: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+  --step-inactive-color: #6c757d;
+  --navbar-bg: rgba(255, 255, 255, 0.92);
+  --navbar-border: rgba(0, 0, 0, 0.08);
+  --navbar-text: #495057;
+  --navbar-link-hover-bg: rgba(13, 110, 253, 0.08);
+  --navbar-link-hover-color: #0d6efd;
+  --fork-border: #0d6efd;
+  --fork-color: #0d6efd;
+  --fork-hover-bg: #0d6efd;
+  --fork-hover-color: #ffffff;
+  --toggle-border: #e9ecef;
+  --toggle-color: #6c757d;
+  --toggle-hover-border: #0d6efd;
+  --toggle-hover-color: #0d6efd;
+  --toggle-hover-bg: rgba(13, 110, 253, 0.08);
+}
+
+/* Dark mode token overrides */
+[data-bs-theme="dark"] {
+  --bg-page: #0f1419;
+  --bg-card: #1a202c;
+  --bg-card-alt: #1e2636;
+  --bg-input: #1a202c;
+  --bg-input-readonly: #151c26;
+  --text-primary: #e2e8f0;
+  --text-secondary: #cbd5e1;
+  --text-muted-custom: #94a3b8;
+  --border-color: #2d3748;
+  --step-inactive-bg: linear-gradient(135deg, #2d3748 0%, #1e2636 100%);
+  --step-inactive-color: #94a3b8;
+  --navbar-bg: rgba(15, 20, 25, 0.95);
+  --navbar-border: rgba(255, 255, 255, 0.08);
+  --navbar-text: #cbd5e1;
+  --navbar-link-hover-bg: rgba(147, 197, 253, 0.1);
+  --navbar-link-hover-color: #93c5fd;
+  --fork-border: #93c5fd;
+  --fork-color: #93c5fd;
+  --fork-hover-bg: #93c5fd;
+  --fork-hover-color: #0f1419;
+  --toggle-border: #2d3748;
+  --toggle-color: #94a3b8;
+  --toggle-hover-border: #93c5fd;
+  --toggle-hover-color: #93c5fd;
+  --toggle-hover-bg: rgba(147, 197, 253, 0.1);
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.4), 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
 }
 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f9fa;
+  background-color: var(--bg-page);
   margin: 0;
   padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ============================================
@@ -596,10 +663,7 @@ body {
   }
 }
 
-/* Smooth Scroll */
-html {
-  scroll-behavior: smooth;
-}
+/* Smooth scroll is set in the :root section */
 
 /* Custom Scrollbar untuk Suggestions */
 .suggestions::-webkit-scrollbar {
@@ -1705,5 +1769,727 @@ html {
 
   .crop-status-bar i {
     font-size: 0.85rem;
+  }
+}
+
+/* ============================================
+   NAVBAR STYLES
+   ============================================ */
+
+.navbar-app {
+  background: var(--navbar-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--navbar-border);
+  min-height: 64px;
+  z-index: 1030;
+  padding: 0;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.navbar-app,
+.navbar-app .container {
+  flex-wrap: nowrap; /* prevent items from dropping to a new line on mobile */
+  min-height: 64px;
+}
+
+/* Logo — override Bootstrap .navbar-brand color so gradient-clip works */
+.navbar-app .navbar-brand,
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.2px;
+  flex-shrink: 0;
+  padding: 0.5rem 0;
+  color: transparent; /* gradient handles coloring via background-clip */
+}
+
+/* Mobile group and hamburger must never shrink */
+.navbar-app .navbar-toggler {
+  flex-shrink: 0;
+}
+
+/* Mobile actions group: always stays on same row as hamburger */
+.navbar-app .d-lg-none {
+  flex-shrink: 0;
+}
+
+.navbar-logo-icon {
+  font-size: 1.6rem;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(13, 110, 253, 0.3));
+}
+
+.navbar-logo-text {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+}
+
+/* Logo text visibility is controlled by Bootstrap utility classes on the element */
+
+/* Nav links */
+.nav-link-app {
+  color: var(--navbar-text);
+  font-weight: 500;
+  font-size: 0.925rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease;
+  display: block;
+  white-space: nowrap;
+}
+
+.nav-link-app:hover,
+.nav-link-app.active {
+  color: var(--navbar-link-hover-color);
+  background: var(--navbar-link-hover-bg);
+}
+
+/* Fork button */
+.btn-fork {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 1.1rem;
+  border: 1.5px solid var(--fork-border);
+  border-radius: 50px;
+  color: var(--fork-color);
+  font-weight: 600;
+  font-size: 0.875rem;
+  background: transparent;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-fork:hover {
+  background: var(--fork-hover-bg);
+  color: var(--fork-hover-color);
+  border-color: var(--fork-hover-bg);
+  text-decoration: none;
+}
+
+/* Mobile fork button: circle matching the theme toggle.
+   Two-class selector (.btn.btn-fork-sm) overrides Bootstrap's .btn and .btn-fork */
+.btn.btn-fork-sm {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 0;
+  line-height: 1;
+  font-size: 1rem;
+}
+
+/* Theme toggle button */
+.btn-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--toggle-border);
+  background: transparent;
+  color: var(--toggle-color);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-theme-toggle:hover {
+  border-color: var(--toggle-hover-border);
+  color: var(--toggle-hover-color);
+  background: var(--toggle-hover-bg);
+}
+
+.btn-theme-toggle:focus-visible {
+  outline: 2px solid var(--toggle-hover-border);
+  outline-offset: 2px;
+}
+
+/* Theme icons: CSS-controlled visibility via data-bs-theme attribute */
+.theme-icon-sun {
+  display: none;
+}
+
+.theme-icon-moon {
+  display: block;
+}
+
+[data-bs-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+
+[data-bs-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+
+/* Hamburger toggler color in dark mode (Bootstrap's CSS variable approach) */
+[data-bs-theme="dark"] .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+/* Mobile nav collapse: add padding and divider */
+@media (max-width: 991.98px) {
+  #navbarMenu {
+    border-top: 1px solid var(--navbar-border);
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .navbar-nav.gap-1 {
+    gap: 0.25rem !important;
+  }
+
+  .nav-link-app {
+    padding: 0.6rem 1rem;
+    border-radius: 0.5rem;
+  }
+}
+
+/* ============================================
+   DARK MODE - COMPONENT OVERRIDES
+   ============================================ */
+
+/* Step indicator */
+[data-bs-theme="dark"] .step-indicator {
+  background: var(--bg-card);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .step-number {
+  background: var(--step-inactive-bg);
+  color: var(--step-inactive-color);
+}
+
+[data-bs-theme="dark"] .step-label {
+  color: var(--text-muted-custom);
+}
+
+[data-bs-theme="dark"] .step-item.active .step-label {
+  color: #93c5fd;
+}
+
+[data-bs-theme="dark"] .step-connector {
+  background: linear-gradient(90deg, #2d3748 0%, #1e2636 100%);
+}
+
+/* Cards */
+[data-bs-theme="dark"] .card-modern {
+  background: var(--bg-card);
+}
+
+/* Inputs */
+[data-bs-theme="dark"] .input-enhanced {
+  border-color: var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .input-enhanced:focus {
+  border-color: #3b82f6;
+  background: var(--bg-card-alt);
+  box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.2);
+}
+
+[data-bs-theme="dark"] .input-enhanced:read-only {
+  background: var(--bg-input-readonly);
+  color: var(--text-muted-custom);
+}
+
+[data-bs-theme="dark"] .input-icon {
+  color: var(--text-muted-custom);
+}
+
+[data-bs-theme="dark"] .form-label {
+  color: var(--text-secondary);
+}
+
+/* Info sections */
+[data-bs-theme="dark"] .info-section {
+  background: linear-gradient(135deg, var(--bg-card-alt) 0%, var(--bg-card) 100%);
+  border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .section-subtitle {
+  color: var(--text-muted-custom);
+}
+
+/* Suggestions dropdown */
+[data-bs-theme="dark"] .suggestions {
+  background: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .suggestion-item {
+  color: var(--text-primary);
+  border-bottom-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .suggestion-item:hover {
+  background-color: var(--bg-card-alt);
+}
+
+/* Map & video wrappers */
+[data-bs-theme="dark"] .map-wrapper {
+  border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .video-wrapper {
+  border-color: var(--border-color);
+}
+
+/* Dark map via invert + hue-rotate trick (natural colors, dark background) */
+[data-bs-theme="dark"] .map-container-enhanced {
+  filter: invert(1) hue-rotate(180deg);
+  opacity: 0.88;
+}
+
+/* Re-invert markers/popups so they look normal */
+[data-bs-theme="dark"] .map-container-enhanced .leaflet-marker-icon,
+[data-bs-theme="dark"] .map-container-enhanced .leaflet-marker-shadow,
+[data-bs-theme="dark"] .map-container-enhanced .leaflet-popup-content-wrapper,
+[data-bs-theme="dark"] .map-container-enhanced .leaflet-popup-tip {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Loading indicator */
+[data-bs-theme="dark"] .loading-text {
+  color: var(--text-muted-custom);
+}
+
+/* Result section */
+[data-bs-theme="dark"] .result-image-wrapper {
+  background: linear-gradient(135deg, var(--bg-card-alt) 0%, var(--bg-card) 100%);
+  border-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .result-image-wrapper.heatmap-wrapper {
+  background: linear-gradient(135deg, #2a1c1c 0%, var(--bg-card) 100%);
+  border-color: #4a2c2c;
+}
+
+[data-bs-theme="dark"] .result-image-label {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+[data-bs-theme="dark"] .result-image-wrapper.heatmap-wrapper .result-image-label {
+  color: #f87171;
+}
+
+/* Info cards */
+[data-bs-theme="dark"] .info-card-modern {
+  background: var(--bg-card);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+[data-bs-theme="dark"] .info-card-modern:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+[data-bs-theme="dark"] .info-card-header {
+  border-bottom-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .info-card-header .card-title {
+  color: var(--text-primary);
+}
+
+[data-bs-theme="dark"] .info-label {
+  color: var(--text-muted-custom);
+}
+
+[data-bs-theme="dark"] .info-value,
+[data-bs-theme="dark"] .info-value .text-muted {
+  color: var(--text-muted-custom) !important;
+}
+
+/* Cropped gallery items */
+[data-bs-theme="dark"] .crop-status-bar {
+  background: var(--bg-card-alt);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* Modal */
+[data-bs-theme="dark"] #cropZoomModal .modal-body {
+  background: var(--bg-card-alt);
+}
+
+[data-bs-theme="dark"] .crop-explanation-section {
+  background: var(--bg-card);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+[data-bs-theme="dark"] .explanation-content {
+  color: var(--text-muted-custom);
+}
+
+/* Badge modern */
+[data-bs-theme="dark"] .badge-modern.badge-primary {
+  box-shadow: 0 2px 8px rgba(13, 110, 253, 0.3);
+}
+
+/* Form control readonly – override Bootstrap's dark form-control for readonly */
+[data-bs-theme="dark"] .form-control[readonly] {
+  background-color: var(--bg-input-readonly);
+  color: var(--text-muted-custom);
+}
+
+/* ============================================
+   ACTIVE NAV LINK (scroll spy helper)
+   ============================================ */
+.nav-link-app.active {
+  color: var(--navbar-link-hover-color);
+  background: var(--navbar-link-hover-bg);
+  font-weight: 600;
+}
+
+/* ============================================
+   PROJECT INFO BANNER (PIB)
+   ============================================ */
+
+.pib-wrapper {
+  position: relative;
+  border-radius: var(--border-radius);
+  background: var(--bg-card);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.pib-wrapper:hover {
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Animated gradient accent bar on top */
+.pib-accent-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 50%, #0d6efd 100%);
+  background-size: 200% 100%;
+  animation: barShimmer 3s linear infinite;
+}
+
+@keyframes barShimmer {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+.pib-body {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+/* ---- Left section ---- */
+.pib-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  flex: 1;
+  padding: 1.75rem 2rem;
+  border-right: 1px solid var(--border-color);
+}
+
+.pib-icon-wrap {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.pib-icon {
+  font-size: 1.6rem;
+  color: white;
+}
+
+.pib-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #0d6efd;
+  margin-bottom: 0.35rem;
+}
+
+.pib-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
+}
+
+.pib-desc {
+  font-size: 0.875rem;
+  color: var(--text-muted-custom);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.pib-desc strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.pib-desc em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Tech tags */
+.pib-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pib-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(13, 110, 253, 0.08);
+  color: #0d6efd;
+  border: 1px solid rgba(13, 110, 253, 0.2);
+  transition: all 0.2s ease;
+  cursor: default;
+}
+
+.pib-tag:hover {
+  background: rgba(13, 110, 253, 0.15);
+  border-color: rgba(13, 110, 253, 0.4);
+}
+
+/* ---- Right section: Star CTA ---- */
+.pib-star-cta {
+  flex-shrink: 0;
+  width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1.5rem;
+  background: linear-gradient(160deg, rgba(13, 110, 253, 0.04) 0%, rgba(13, 202, 240, 0.04) 100%);
+}
+
+.pib-star-inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pib-star-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #24292e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pib-gh-icon {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.pib-star-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted-custom);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* GitHub Star button */
+.btn-gh-star {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.35rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #f6c90e 0%, #e8a800 100%);
+  color: #1c1200;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border: none;
+  box-shadow: 0 4px 12px rgba(230, 168, 0, 0.4);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn-gh-star::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-gh-star:hover::before {
+  left: 100%;
+}
+
+.btn-gh-star:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(230, 168, 0, 0.55);
+  color: #1c1200;
+  text-decoration: none;
+}
+
+.btn-gh-star:active {
+  transform: translateY(0);
+}
+
+.btn-gh-star-icon {
+  animation: starPulse 2s ease-in-out infinite;
+}
+
+@keyframes starPulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.25) rotate(10deg); }
+}
+
+.pib-star-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted-custom);
+  margin: 0;
+  opacity: 0.75;
+}
+
+/* ---- Dark mode overrides ---- */
+[data-bs-theme="dark"] .pib-wrapper {
+  background: var(--bg-card);
+}
+
+[data-bs-theme="dark"] .pib-left {
+  border-right-color: var(--border-color);
+}
+
+[data-bs-theme="dark"] .pib-label {
+  color: #93c5fd;
+}
+
+[data-bs-theme="dark"] .pib-tag {
+  background: rgba(147, 197, 253, 0.1);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.25);
+}
+
+[data-bs-theme="dark"] .pib-tag:hover {
+  background: rgba(147, 197, 253, 0.18);
+  border-color: rgba(147, 197, 253, 0.45);
+}
+
+[data-bs-theme="dark"] .pib-star-cta {
+  background: linear-gradient(160deg, rgba(147, 197, 253, 0.04) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+[data-bs-theme="dark"] .pib-star-icon-wrap {
+  background: #161b22;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 991.98px) {
+  .pib-star-cta {
+    width: 200px;
+    padding: 1.5rem 1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .pib-body {
+    flex-direction: column;
+  }
+
+  .pib-left {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+  }
+
+  .pib-star-cta {
+    width: 100%;
+    padding: 1.5rem;
+    background: linear-gradient(160deg, rgba(13, 110, 253, 0.04) 0%, rgba(13, 202, 240, 0.03) 100%);
+  }
+
+  .pib-star-inner {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .pib-star-icon-wrap {
+    display: none;
+  }
+
+  .pib-star-hint {
+    text-align: center;
+    width: 100%;
+  }
+
+  .pib-star-sub {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .pib-left {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pib-icon-wrap {
+    width: 48px;
+    height: 48px;
+  }
+
+  .pib-icon {
+    font-size: 1.4rem;
   }
 }

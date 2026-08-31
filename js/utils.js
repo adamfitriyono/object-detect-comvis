@@ -21,7 +21,7 @@ function initNotificationContainer() {
     notificationContainer.id = 'notification-container';
     notificationContainer.style.cssText = `
             position: fixed;
-            top: 20px;
+            top: 80px;
             right: 20px;
             z-index: 10000;
             display: flex;
