@@ -29,49 +29,51 @@
   <body class="d-flex flex-column min-vh-100">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-app sticky-top" id="top" aria-label="Main navigation">
-      <div class="container">
+    <nav class="navbar-app sticky-top" id="top" aria-label="Main navigation">
+      <!-- Main row: Logo | Center nav (desktop) | Right group -->
+      <div class="container navbar-inner">
+
         <!-- Logo (left) -->
-        <a class="navbar-brand navbar-logo" href="#top">
+        <a class="navbar-logo" href="#top">
           <i class="bi bi-cone-striped navbar-logo-icon"></i>
-          <span class="navbar-logo-text d-none d-md-inline">Deteksi Jalan Berlubang</span>
+          <span class="navbar-logo-text">Deteksi Jalan Berlubang</span>
         </a>
 
-        <!-- Mobile: Fork + Theme toggle (always visible before hamburger) -->
-        <div class="d-flex align-items-center gap-2 d-lg-none ms-auto me-1">
-          <a href="https://github.com/adamfitriyono/object-detect-comvis/fork" class="btn btn-fork btn-fork-sm" target="_blank" rel="noopener noreferrer" aria-label="Fork on GitHub" title="Fork di GitHub">
+        <!-- Center nav links — desktop only -->
+        <ul class="navbar-center-nav">
+          <li><a class="nav-link-app" href="#top">Beranda</a></li>
+          <li><a class="nav-link-app" href="#location-section">Lokasi</a></li>
+          <li><a class="nav-link-app" href="#camera-section">Kamera</a></li>
+          <li><a class="nav-link-app" href="#result-section">Hasil</a></li>
+        </ul>
+
+        <!-- Right group: Fork + Toggle + Hamburger always in one flex row -->
+        <div class="navbar-right-group">
+          <a href="https://github.com/adamfitriyono/object-detect-comvis/fork" class="btn-fork" target="_blank" rel="noopener noreferrer" title="Fork di GitHub" aria-label="Fork on GitHub">
             <i class="bi bi-github"></i>
+            <span class="fork-label">Fork</span>
           </a>
-          <button class="btn btn-theme-toggle theme-toggle-trigger" id="themeToggleMobile" aria-label="Toggle dark mode" aria-pressed="false">
+          <button class="btn-theme-toggle theme-toggle-trigger" id="themeToggleBtn" aria-label="Toggle dark mode" aria-pressed="false">
             <i class="bi bi-moon-stars-fill theme-icon-moon"></i>
             <i class="bi bi-sun-fill theme-icon-sun"></i>
           </button>
+          <!-- Hamburger: only visible on mobile -->
+          <button class="navbar-hamburger" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-list navbar-hamburger-icon"></i>
+          </button>
         </div>
 
-        <!-- Hamburger toggler -->
-        <button class="navbar-toggler border-0 ps-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+      </div>
 
-        <!-- Collapsible: nav links (center) + desktop actions (right) -->
-        <div class="collapse navbar-collapse" id="navbarMenu">
-          <ul class="navbar-nav mx-auto gap-1 py-2 py-lg-0">
-            <li class="nav-item"><a class="nav-link-app" href="#top">Beranda</a></li>
-            <li class="nav-item"><a class="nav-link-app" href="#location-section">Lokasi</a></li>
-            <li class="nav-item"><a class="nav-link-app" href="#camera-section">Kamera</a></li>
-            <li class="nav-item"><a class="nav-link-app" href="#result-section">Hasil</a></li>
+      <!-- Mobile collapse menu (outside the flex row so it wraps below naturally) -->
+      <div class="collapse" id="navbarMenu">
+        <div class="container navbar-mobile-menu">
+          <ul>
+            <li><a class="nav-link-app" href="#top">Beranda</a></li>
+            <li><a class="nav-link-app" href="#location-section">Lokasi</a></li>
+            <li><a class="nav-link-app" href="#camera-section">Kamera</a></li>
+            <li><a class="nav-link-app" href="#result-section">Hasil</a></li>
           </ul>
-
-          <!-- Desktop actions (hidden on mobile, shown via d-lg-flex) -->
-          <div class="d-none d-lg-flex align-items-center gap-2">
-            <a href="https://github.com/adamfitriyono/object-detect-comvis/fork" class="btn btn-fork" target="_blank" rel="noopener noreferrer">
-              <i class="bi bi-github me-1"></i>Fork
-            </a>
-            <button class="btn btn-theme-toggle theme-toggle-trigger" id="themeToggleDesktop" aria-label="Toggle dark mode" aria-pressed="false">
-              <i class="bi bi-moon-stars-fill theme-icon-moon"></i>
-              <i class="bi bi-sun-fill theme-icon-sun"></i>
-            </button>
-          </div>
         </div>
       </div>
     </nav>

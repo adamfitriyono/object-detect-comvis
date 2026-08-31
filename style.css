@@ -1776,25 +1776,25 @@ body {
    NAVBAR STYLES
    ============================================ */
 
+/* ---- Navbar shell ---- */
 .navbar-app {
   background: var(--navbar-bg);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--navbar-border);
-  min-height: 64px;
   z-index: 1030;
-  padding: 0;
   transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-.navbar-app,
-.navbar-app .container {
-  flex-wrap: nowrap; /* prevent items from dropping to a new line on mobile */
+/* ---- Main flex row (Logo | Center nav | Right group) ---- */
+.navbar-inner {
+  display: flex;
+  align-items: center;
   min-height: 64px;
+  gap: 1rem;
 }
 
-/* Logo — override Bootstrap .navbar-brand color so gradient-clip works */
-.navbar-app .navbar-brand,
+/* ---- Logo ---- */
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -1804,18 +1804,11 @@ body {
   font-size: 1rem;
   letter-spacing: -0.2px;
   flex-shrink: 0;
-  padding: 0.5rem 0;
-  color: transparent; /* gradient handles coloring via background-clip */
+  white-space: nowrap;
 }
 
-/* Mobile group and hamburger must never shrink */
-.navbar-app .navbar-toggler {
-  flex-shrink: 0;
-}
-
-/* Mobile actions group: always stays on same row as hamburger */
-.navbar-app .d-lg-none {
-  flex-shrink: 0;
+.navbar-logo:hover {
+  text-decoration: none;
 }
 
 .navbar-logo-icon {
@@ -1833,36 +1826,48 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  white-space: nowrap;
 }
 
-/* Logo text visibility is controlled by Bootstrap utility classes on the element */
-
-/* Nav links */
-.nav-link-app {
-  color: var(--navbar-text);
-  font-weight: 500;
-  font-size: 0.925rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 0.5rem;
-  text-decoration: none;
-  transition: color 0.2s ease, background 0.2s ease;
-  display: block;
-  white-space: nowrap;
+/* Hide logo text below md (768px) — not enough room alongside right-group on small screens */
+@media (max-width: 767.98px) {
+  .navbar-logo-text {
+    display: none;
+  }
 }
 
-.nav-link-app:hover,
-.nav-link-app.active {
-  color: var(--navbar-link-hover-color);
-  background: var(--navbar-link-hover-bg);
+/* ---- Center nav — desktop only ---- */
+.navbar-center-nav {
+  display: none; /* hidden on mobile */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
 }
 
-/* Fork button */
+@media (min-width: 992px) {
+  .navbar-center-nav {
+    display: flex;
+  }
+}
+
+/* ---- Right group (Fork + Toggle + Hamburger always in one row) ---- */
+.navbar-right-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ---- Fork button ---- */
 .btn-fork {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.45rem 1.1rem;
+  justify-content: center;
+  gap: 0.4rem;
   border: 1.5px solid var(--fork-border);
   border-radius: 50px;
   color: var(--fork-color);
@@ -1871,7 +1876,9 @@ body {
   background: transparent;
   text-decoration: none;
   transition: all 0.2s ease;
-  white-space: nowrap;
+  cursor: pointer;
+  /* Desktop: pill shape */
+  padding: 0.45rem 1.1rem;
 }
 
 .btn-fork:hover {
@@ -1881,24 +1888,21 @@ body {
   text-decoration: none;
 }
 
-/* Mobile fork button: circle matching the theme toggle.
-   Two-class selector (.btn.btn-fork-sm) overrides Bootstrap's .btn and .btn-fork */
-.btn.btn-fork-sm {
-  width: 40px !important;
-  height: 40px !important;
-  min-width: 40px;
-  padding: 0 !important;
-  border-radius: 50% !important;
-  display: inline-flex !important;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  gap: 0;
-  line-height: 1;
-  font-size: 1rem;
+/* Mobile: circle, same size as toggle button */
+@media (max-width: 991.98px) {
+  .btn-fork {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .fork-label {
+    display: none;
+  }
 }
 
-/* Theme toggle button */
+/* ---- Theme toggle button ---- */
 .btn-theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -1927,45 +1931,89 @@ body {
   outline-offset: 2px;
 }
 
-/* Theme icons: CSS-controlled visibility via data-bs-theme attribute */
-.theme-icon-sun {
-  display: none;
+/* ---- Hamburger button ---- */
+.navbar-hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1.5px solid var(--toggle-border);
+  border-radius: 0.5rem;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.theme-icon-moon {
+.navbar-hamburger:hover {
+  border-color: var(--toggle-hover-border);
+  background: var(--toggle-hover-bg);
+}
+
+/* Hide hamburger on desktop */
+@media (min-width: 992px) {
+  .navbar-hamburger {
+    display: none;
+  }
+}
+
+/* ---- Theme icons — CSS-controlled via data-bs-theme ---- */
+.theme-icon-sun { display: none; }
+.theme-icon-moon { display: block; }
+
+[data-bs-theme="dark"] .theme-icon-sun { display: block; }
+[data-bs-theme="dark"] .theme-icon-moon { display: none; }
+
+/* Hamburger icon — uses currentColor so it works in both light and dark mode */
+.navbar-hamburger-icon {
+  font-size: 1.5rem;
+  color: var(--navbar-text);
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.navbar-hamburger:hover .navbar-hamburger-icon {
+  color: var(--navbar-link-hover-color);
+}
+
+/* ---- Nav links ---- */
+.nav-link-app {
+  color: var(--navbar-text);
+  font-weight: 500;
+  font-size: 0.925rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease;
   display: block;
+  white-space: nowrap;
 }
 
-[data-bs-theme="dark"] .theme-icon-sun {
-  display: block;
+.nav-link-app:hover,
+.nav-link-app.active {
+  color: var(--navbar-link-hover-color);
+  background: var(--navbar-link-hover-bg);
 }
 
-[data-bs-theme="dark"] .theme-icon-moon {
-  display: none;
+/* ---- Mobile collapse menu ---- */
+.navbar-mobile-menu {
+  border-top: 1px solid var(--navbar-border);
+  padding: 0.5rem 0 0.75rem;
 }
 
-/* Hamburger toggler color in dark mode (Bootstrap's CSS variable approach) */
-[data-bs-theme="dark"] .navbar-toggler-icon {
-  filter: invert(1);
+.navbar-mobile-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
 }
 
-/* Mobile nav collapse: add padding and divider */
-@media (max-width: 991.98px) {
-  #navbarMenu {
-    border-top: 1px solid var(--navbar-border);
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.75rem;
-  }
-
-  .navbar-nav.gap-1 {
-    gap: 0.25rem !important;
-  }
-
-  .nav-link-app {
-    padding: 0.6rem 1rem;
-    border-radius: 0.5rem;
-  }
+.navbar-mobile-menu .nav-link-app {
+  padding: 0.65rem 1rem;
 }
 
 /* ============================================
